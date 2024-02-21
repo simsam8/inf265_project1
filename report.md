@@ -24,10 +24,19 @@ The optional `verbose` parameter allows for printing debugging information relat
 
 The use of the `torch.no_grad()` context ensures that the gradients are not automatically computed by PyTorch for operations within its scope. This is important to avoid an accumulation of gradient computations that are not necessary for the forward pass or the gradient update step itself.
 
-To summarize, these design choices ensure efficient computation, compatibility with PyTorch, and flexibility for debugging and integration into larger models.
+However, though it might seem like our implementation of backpropagation converges, there might be a logical error that prevents us from reaching an actual minima. Without comparing the calculated gradient to something we know is correct, we don't actually know whether the implementation is converging to an actual minimum. Therefore, we have compared the calculated gradients with the output from Pytorch's `loss.backward()`. Alternatively, we could have used the definition of the derivative to check whether the calculated gradients seem correct. This method is called **gradient checking**. The definition of the derivative is: 
 
-Further improvements can be made by including a gradient checking method such as ... (citation), which uses numerical approximation to check whether the computed gradients are (probably) correct. This is computationally expensive, but could be included as part of the development or debugging process. ...
+$f'(x) = \frac{f(x + \epsilon) - f(x)}{\epsilon}$, where $\epsilon$ is some small number. 
 
+In the case of backpropagation, the definition could be applied like this: 
+
+$\frac{\partial L}{\partial \theta} = \frac{f(\theta + \epsilon) - f(\theta)}{\epsilon}$, where $\theta$ are the weights and biases for a layer, and $f(\theta)$ is the activation for the same layer. 
+
+So we could, for a subset of the data or a pre-specified layer, compare the results from:
+1) Running the backpropagation implementation for parameters $\theta$ and $\theta$ + $\epsilon$
+2) Using the definition of the derivative: Set $\epsilon$ to a small number and calculate the result using the formula.
+
+The difference between the two calculations should be less than $\epsilon^2$. Performing these two calculations is very computationally expensive, but it could be useful to debug the training algorithm. At every layer, we could include a gradient checking option that runs the additional computations, does the comparision, and raises an error when the calculated gradient is incorrect. 
 
 ## Gradient descent
 
