@@ -9,12 +9,27 @@ numbersections: true
 # Approach and Design choices
 
 ## Backpropagation
-<!-- Todo -->
+The function ``backpropagation(model, y_true, y_pred)`` is a fully vectorized implementation of the backpropogation algorithm that computes:
+
+- $\frac{\partial L}{\partial w^{[l]}_{i,j}}$ and stores them in the model class' weight attribute ``model.dL_dw[l][i,j]`` for $l \in [1 .. L]$ 
+- $\frac{\partial L}{\partial b^{[l]}_{j}}$ and stores them in the model class' weight attribute ``model.dL_db[l][j]`` for $l \in [1 .. L]$ 
+
+The function assumes that ``model`` is an instance of the ``MyNet`` class.
+
+The aim of this implementation is to be functionally equivalent to Pytorch's `loss.backward()` method. It accepts Pytorch Tensors as inputs for `y_true`, `y_pred` and the model's parameters. The backpropagation algorithm is then run directly on Pytorch Tensors without conversion to Numpy arrays. The implementation utilizes the Pytorch matrix multiplication method `.mm()` to calculate $\frac{\partial L}{\partial a}$ and $\frac{\partial L}{\partial w}$, which is very computationally efficient because it takes full advantage of PyTorch's optimized backend operations. 
+
+In accordance with the backpropagation algorithm, we iterate over the layers in reverse order such that the gradients are calculated starting from the output layer and propagated backward through the network. The layer-by-layer approach, coupled with the calculation of the derivative of the activation functions (model.df[l](model.z[l])), ensures that the implementation can handle networks with multiple layers and different activation functions.
+
+The optional `verbose` parameter allows for printing debugging information related to the dimensionality of derivatives and matrix multiplications, which helped us troubleshoot the code during the development process and understand how the gradients flow through the network. 
+
+The use of the `torch.no_grad()` context ensures that the gradients are not automatically computed by PyTorch for operations within its scope. This is important to avoid an accumulation of gradient computations that are not necessary for the forward pass or the gradient update step itself.
+
+To summarize, these design choices ensure efficient computation, compatibility with PyTorch, and flexibility for debugging and integration into larger models.
+
 
 ## Gradient descent
 
 ### Setup
-
 - Set seed with value: 256
 - Check if cuda is available
 - Set default datatype for pytorch as double
