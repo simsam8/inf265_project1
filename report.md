@@ -6,6 +6,10 @@ author:
 numbersections: true
 ---
 
+# Introduction
+
+#### Arbeidsfordelinggg
+
 # Approach and Design choices
 
 ## Backpropagation
@@ -24,49 +28,31 @@ The optional `verbose` parameter allows for printing debugging information relat
 
 The use of the `torch.no_grad()` context ensures that the gradients are not automatically computed by PyTorch for operations within its scope. This is important to avoid an accumulation of gradient computations that are not necessary for the forward pass or the gradient update step itself.
 
-However, though it might seem like our implementation of backpropagation converges, there might be a logical error that prevents us from reaching an actual minima. Without comparing the calculated gradient to something we know is correct, we don't actually know whether the implementation is converging to an actual minimum. Therefore, we have compared the calculated gradients with the output from Pytorch's `loss.backward()`. Alternatively, we could have used the definition of the derivative to check whether the calculated gradients seem correct. This method is called **gradient checking**. The definition of the derivative is: 
 
-$f'(x) = \frac{f(x + \epsilon) - f(x)}{\epsilon}$, where $\epsilon$ is some small number. 
-
-In the case of backpropagation, the definition could be applied like this: 
-
-$\frac{\partial L}{\partial \theta} = \frac{f(\theta + \epsilon) - f(\theta)}{\epsilon}$, where $\theta$ are the weights and biases for a layer, and $f(\theta)$ is the activation for the same layer. 
-
-So we could, for a subset of the data or a pre-specified layer, compare the results from:
-1) Running the backpropagation implementation for parameters $\theta$ and $\theta$ + $\epsilon$
-2) Using the definition of the derivative: Set $\epsilon$ to a small number and calculate the result using the formula.
-
-The difference between the two calculations should be less than $\epsilon^2$. Performing these two calculations is very computationally expensive, but it could be useful to debug the training algorithm. At every layer, we could include a gradient checking option that runs the additional computations, does the comparision, and raises an error when the calculated gradient is incorrect. 
 
 ## Gradient descent
 
 ### Setup
 - Set seed with value: 256
 - Check if cuda is available
-- Set default datatype for pytorch as double
+- Set default datatype for Pytorch as double
 - The MyMLP model architecture is created according to the task description.
 
 
 ### Loading data
 
-The load_CIFAR2 function loads CIFAR10 data with only the labels airplane and bird.
-The default train/validation split is 90/10, and is what we have used when training.
+The load_CIFAR2 function loads CIFAR10 data with only the labels `airplane` and `bird`. We use the default train/validation split of 90% training data, and 10% validation data.
 
 ### Preprocessing
 
-The only preprocessing step used was normalization.
+The only preprocessing step was normalization, which we performed by utilizing `Pytorch.transforms.Normalize` with the mean and standard deviation of all images in the training set. 
 
 
 ### Training
 
-Both training functions follows the same standard procedure for fitting a model.
-For a given amount of epochs; forward pass through the network to calculate loss,
-then compute the gradients with backpropagation, then update the parameters with 
-the learning learning rate.
+Both training functions follows the same standard procedure for fitting a model. For a given amount of epochs; forward pass through the network to calculate loss, then compute the gradients with backpropagation, then update the parameters with the learning learning rate.
 
-The functions differs in the parameter update step. The train function uses pytorch's 
-SGD optimizer while the train_manual_update manually implements SGD with optional momentum and
-weight decay.
+The functions differs in the parameter update step. The train function uses pytorch's SGD optimizer while the train_manual_update manually implements SGD with optional momentum and weight decay.
 
 
 ### Model comparison
@@ -92,35 +78,44 @@ and then evaluated on the test set.
 
 # Q&A
 
-a) Which PyTorch method(s) correspond to the tasks described in section 2?
-    - In general the backward() method in a pytorch Tensor is responsible for calculating the gradients. 
-    More specifically, the backward() is usually called on the loss object.
-    This the backward() method corresponds to the tasks described in section 2.
+### Backpropagation
+**Question 1:** *Which PyTorch method(s) correspond to the tasks described in section 2?*
 
-b) Cite a method used to check whether the computed gradient of a function seems correct.
-    Briefly explain how you would use this method to check your computed gradients in
-    section 2.
-    - The shape of the computed gradients should match the shape of respective parameter.
-        E.x. if the shape of w1 is [4,2], then the shape of dl_w1 should be [4, 2]
-    - In section 2, we would make sure the shape of each Tensor matches.
+The Pytorch method `loss.backward()` should be functionally equivalent, though it is more efficient. 
 
-c) Which PyTorch method(s) correspond to the tasks described in section 3, question 4.?
-    - The step method in the optimizer object is equivalent with the manual parameter update.
+**Question 2**: *Cite a method used to check whether the computed gradient of a function seems correct. Briefly explain how you would use this method to check your computed gradients in section 2*
 
-d) Briefly explain the purpose of adding momentum to the gradient descent algorithm.
-    - The purpose of adding momentum to the gradient descent algorithm, is so that the optimizer
-        "remembers" the direction it was previously moving. Benefits include faster convergence,
-        less oscillations due to noise, or complex landscapes, escape local minima, and improve 
-        exploration.
+Though it might seem like our implementation of backpropagation converges, there might be a logical error that prevents us from reaching an actual minima. Without comparing the calculated gradient to something we know is correct, we don't actually know whether the implementation is converging to an actual minimum. Therefore, we have compared the calculated gradients with the output from Pytorch's `loss.backward()`. Alternatively, we could have used the definition of the derivative to check whether the calculated gradients seem correct. This method is called **gradient checking**. The definition of the derivative is: 
 
-e) Briefly explain the purpose of adding regularization to the gradient descent algorithm.
-    - The purpose of adding regularization is to penalize the algorithm for overfitting and 
-    improve generalization performance.
+$f'(x) = \frac{f(x + \epsilon) - f(x)}{\epsilon}$, where $\epsilon$ is some small number. 
 
-f) Report the different parameters used in section 3, question 8., the selected parameters in
-    question 9. as well as the evaluation of your selected model.
+In the case of backpropagation, the definition could be applied like this: 
+
+$\frac{\partial L}{\partial \theta} = \frac{f(\theta + \epsilon) - f(\theta)}{\epsilon}$, where $\theta$ are the weights and biases for a layer, and $f(\theta)$ is the activation for the same layer. 
+
+So we could, for a subset of the data or a pre-specified layer, compare the results from:
+1) Running the backpropagation implementation for parameters $\theta$ and $\theta$ + $\epsilon$
+2) Using the definition of the derivative: Set $\epsilon$ to a small number and calculate the result using the formula.
+
+The difference between the two calculations should be less than $\epsilon^2$. Performing these two calculations is very computationally expensive, but it could be useful to debug the training algorithm. At every layer, we could include a gradient checking option that runs the additional computations, does the comparision, and raises an error when the calculated gradient is incorrect. 
+
+### Gradient Descent
+**Question 3:** *Which PyTorch method(s) correspond to the tasks described in section 3, question 4?*
+
+The step method in the `optimizer` object is equivalent with the manual parameter update.
+
+**Question 4:** *Briefly explain the purpose of adding momentum to the gradient descent algorithm.*
+
+The purpose of adding momentum to the gradient descent algorithm is to accelerate convergence. With momentum, the optimizer "remembers" the direction it was previously moving and accumulates the velocity vector across iterations. Additional benefits include less oscillation due to noise or complex landscapes, escaping local minima, and improving exploration.
+
+**Question 5:** *Briefly explain the purpose of adding regularization to the gradient descent algorithm.*
+
+The purpose of adding regularization is to improve the model's ability to generalize. This is achieved by reducing the model complexity (increasing the bias) by penalizing large weights, thus simplifying the model. 
+
+### Evaluation and Results
+**Question 6:** *Report the different parameters used in section 3, question 8, the selected parameters in question 9, as well as the evaluation of your selected model.*
     <!-- Todo -->
 
-g) Comment your results. In case you do not get expected results, try to give potential
-    reasons that would explain why your code does not work and/or your results differ. 
+
+**Question 6:** *Comment your results. In case you do not get expected results, try to give potential reasons that would explain why your code does not work and/or your results differ.*
     <!-- Todo -->
