@@ -7,8 +7,13 @@ numbersections: true
 ---
 
 # Introduction
+This report aims to explain our approach and design choices for our implementation of gradient descent as part of the neural network training process. Additionally, we answer the questions asked in section 4 of the [project description]().
 
-#### Arbeidsfordelinggg
+For general information about the project or how to run the code, please refer to the [README]().
+
+#### Contributions
+ - **Sebastian Røkholt**: Wrote the implementation of backpropagation, and contributed to model evaluation and writing the report.
+ - **Simon Vedaa**: Wrote the training loop, implemented gradient descent with regularization and momentum, did most of the model evaluation and selection and contributed to the report. 
 
 # Approach and Design choices
 
@@ -37,6 +42,7 @@ The use of the `torch.no_grad()` context ensures that the gradients are not auto
 - Check if cuda is available
 - Set default datatype for Pytorch as double
 - The MyMLP model architecture is created according to the task description.
+Please refer to the README.txt for additional setup guidance. 
 
 
 ### Loading data
@@ -106,7 +112,7 @@ The step method in the `optimizer` object is equivalent with the manual paramete
 
 **Question 4:** *Briefly explain the purpose of adding momentum to the gradient descent algorithm.*
 
-The purpose of adding momentum to the gradient descent algorithm is to accelerate convergence. With momentum, the optimizer "remembers" the direction it was previously moving and accumulates the velocity vector across iterations. Additional benefits include less oscillation due to noise or complex landscapes, escaping local minima, and improving exploration.
+The purpose of adding momentum to the gradient descent algorithm is to accelerate convergence. With momentum, the optimizer "remembers" the direction it was previously moving and accumulates the velocity vector across iterations. Additional benefits include less oscillation due to noise or complex loss landscapes, escaping local minima, and improving exploration.
 
 **Question 5:** *Briefly explain the purpose of adding regularization to the gradient descent algorithm.*
 
