@@ -133,15 +133,15 @@ The purpose of adding regularization is to improve the model's ability to genera
 Each model is trained for 50 epochs, and has a batch size of 256.
 These are all the hyperparameter combinations used in training:
 
-| Learning rate    | Weight Decay    | Momentum    |
-|---------------- | --------------- | --------------- |
-| 0.01    | 0.0    | 0.0    |
-| 0.01    | 0.01    | 0.0    |
-| 0.01    | 0.9    | 0.0    |
-| 0.01   | 0.0   | 0.01   |
-| 0.01   | 0.0   | 0.9   |
-| 0.01   | 0.01   | 0.9   |
-| 0.01   | 0.9   | 0.01   |
+| Learning rate    | Weight Decay    | Momentum    | Training Accuracy | Validation Accuracy |
+|---------------- | --------------- | --------------- | -------------- | -----------|
+| 0.01    | 0.0    | 0.0    | 0.93 | 0.82|
+| 0.01    | 0.01    | 0.0    | 0.92 | 0.82|
+| 0.01    | 0.9    | 0.0    | 0.51 | 0.45 |
+| 0.01   | 0.0   | 0.01   | 0.94 | 0.83 |
+| 0.01   | 0.0   | 0.9   | 0.99 | 0.84 |
+| 0.01   | 0.01   | 0.9   | 0.94 | 0.84 |
+| 0.01   | 0.9   | 0.01   | 0.51 | 0.45 |
 
 These are the chosen parameters:
 
@@ -172,5 +172,11 @@ of epochs or apply more regularization. A more exhaustive hyperparameter search,
 hyperparameter combination.
 
 Looking at the confusion matrix, the model seems to perform equally well on both classes.
+
+In Figure 3, images of birds predicted as planes, contains sticks, powerlines or other straight lines
+which might resemble the wings of a plane. In the images of planes predicted as birds they could have 
+curves that might resemble the contour of a birds body. Another possibilty for the wrong predictions 
+could be explained by noise and the low resolution of input images.
+
 
 
