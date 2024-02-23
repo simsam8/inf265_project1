@@ -1,4 +1,4 @@
-# INF264 Project1
+# INF265 Project1
 
 ## Setup
 
@@ -7,7 +7,7 @@ The project was created with Python 3.11. To run and replicate our results, make
 
 To view and run the notebooks, launch Jupyter Notebook with `jupyter notebook` and select the .ipynb files to open them.
 
-To reproduce our work with identical results, you should set the seed for the randoom state to 256, use CUDA (train on GPU) and set the default Pytorch data type to double. 
+To reproduce our work with identical results, you should set the seed for the randoom state to 265, use CUDA (train on GPU) and set the default Pytorch data type to double. 
 
 ## File Structure
 
