@@ -38,7 +38,7 @@ The use of the `torch.no_grad()` context ensures that the gradients are not auto
 ## Gradient descent
 
 ### Setup
-- Set seed with value: 256
+- Set seed with value: 265
 - Check if cuda is available
 - Set default datatype for Pytorch as double
 - The MyMLP model architecture is created according to the task description.
