@@ -1,4 +1,15 @@
-# INF265 Project1
+# INF265 Project 1: Backpropagation and Gradient Descent
+
+This repository contains the code, documentation and report for a deep learning project completed as part of the course INF265: Deep Learning at the University of Bergen. 
+The project assignment was completed as a collaboration between [Simon Vedaa](https://github.com/simsam8) and [Sebastian Røkholt](https://github.com/SebastianRokholt). It was handed in on the 23rd of February 2024. 
+
+The aim of the project was to implement backpropagation and gradient descent with momentum and regularization, as well as perform some model evaluation and selection on the CIFAR-10 dataset. 
+All tasks were completed successfully, and as a result, we gained two things: 
+  1. Valuable experience with PyTorch
+  2. A deeper understanding of the deep learning training process
+
+Feel free to clone or fork the repository, and don't hesitate to contact us or leave an issue if you have any questions. 
+If you found the repository helpful, please leave us a star! 
 
 ## Setup
 
